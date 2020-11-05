@@ -42,7 +42,7 @@ def full_backup(src_dir,dst_dir,md5file):
     tar = tarfile.open(full_name,'w:gz')
     tar.add(base_dir)
     tar.close()
-    announce = "%s  All files have been backed up!\n" % time.strftime("%Y-%m-%d  %H:%M:%S")
+    announce = "\n"+"%s  All files have been backed up!\n" % time.strftime("%Y-%m-%d  %H:%M:%S")+"\n"
     print(announce)
     with open(log_file,"a") as f:
         f.write(announce)
@@ -72,7 +72,7 @@ def inc_backup(src_dir,dst_dir,md5file):
                     if md5old.get(key) != md5new[key]:
                         tar.add(key[key.find(base_dir):])
                 tar.close()
-                announce = "%s  some files have been changed!\n" % time.strftime("%Y-%m-%d  %H:%M:%S")
+                announce = "\n"+"%s  some files have been changed!\n" % time.strftime("%Y-%m-%d  %H:%M:%S")+"\n"
                 print(announce)
                 with open(log_file,"a") as f:
                     f.write(announce)

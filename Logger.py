@@ -2,20 +2,21 @@ import os
 import sys
 import time
 import logging
+import Config
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
-import myBack as b
+import BackupFunctionLib as b
 
 class backup(LoggingEventHandler):
-    def on_any_event(self, event):
-        b.inc_backup(src_dir,dst_dir,md5file)
+    def on_created(self, event):
+        super(backup, self).on_created(event)
+        what = 'directory' if event.is_directory else 'file'
+        logging.info("Created %s: %s", what, event.src_path)
+        b.inc_backup(Config.src_dir,Config.dst_dir,Config.md5file)
+    
     
 
 if __name__ == "__main__":
-    src_dir = 'E:/test'
-    dst_dir = "E:/backup"
-    md5file = 'E:/backup/md5.data'
-    log_file = 'E:/backup/log.txt'
     # src_dir = sys.argv[1]if len(sys.argv) > 1 else '.'
     # dst_dir = sys.argv[2]if len(sys.argv) > 2 else './backup'
     # md5file = sys.argv[1]+'/md5.data'if len(sys.argv) > 1 else './md5.data'
@@ -24,14 +25,13 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
-                    filename=log_file)
-    b.full_backup(src_dir,dst_dir,md5file)
-    print("ok")
+                    filename=Config.log_file)
+    b.full_backup(Config.src_dir,Config.dst_dir,Config.md5file)
 
 
     observer = Observer()
     event_handler = backup()
-    observer.schedule(event_handler,src_dir,True)
+    observer.schedule(event_handler,Config.src_dir,True)
     observer.start()
     try:
         while True:
