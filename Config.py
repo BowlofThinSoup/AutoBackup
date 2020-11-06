@@ -6,3 +6,5 @@ dst_dir = "E:/backup"
 md5file = 'E:/backup/md5.data'
 #日志记录文件存放路径
 log_file = 'E:/backup/log.txt'
+#备份时间
+backup_time = '16:26'

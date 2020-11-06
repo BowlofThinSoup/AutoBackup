@@ -1,4 +1,4 @@
-import time,os,tarfile,pickle,json
+import time,os,tarfile
 from apscheduler.schedulers.blocking import BlockingScheduler
 import Config
 
@@ -14,7 +14,7 @@ def full_backup(src_dir,dst_dir,log_file):
     announce = "\n"+"%s  All files have been backed up!\n" % time.strftime("%Y-%m-%d  %H:%M:%S")+"\n"
     print(announce)
     with open(log_file,"a") as f:
-        f.write(announce)
+        f.write('*'*20+'DailyBackUp'+'*'*20+'\n'+announce+'*'*54+'\n')
 
 #创建任务
 def func():
@@ -25,7 +25,7 @@ def dojob():
     #创建调度器：BlockingScheduler
     scheduler = BlockingScheduler()
     #添加任务,每天备份
-    scheduler.add_job(func, 'cron', day_of_week='0-6',hour=23, minute=59,id='DilyBackup')
+    scheduler.add_job(func, 'cron', day_of_week='0-6',hour=Config.backup_time[0:2], minute=Config.backup_time[3:5],id='DilyBackup')
     # scheduler.add_job(func, 'interval', seconds=15,id='DilyBackuptest')
     scheduler.start()
 

@@ -1,20 +1,22 @@
-import os
-import sys
-import time
-import logging
-import Config
+import os,Config,sys,time,logging
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 import BackupFunctionLib as b
 
 class backup(LoggingEventHandler):
-    def on_created(self, event):
+    # def on_created(self, event):
+    #     super(backup, self).on_created(event)
+    #     what = 'directory' if event.is_directory else 'file'
+    #     logging.info("Created %s: %s", what, event.src_path)
+    #     b.inc_backup(Config.src_dir,Config.dst_dir,Config.md5file)
+    def on_modified(self, event):
         super(backup, self).on_created(event)
         what = 'directory' if event.is_directory else 'file'
-        logging.info("Created %s: %s", what, event.src_path)
-        b.inc_backup(Config.src_dir,Config.dst_dir,Config.md5file)
-    
-    
+        logging.info("Modified %s: %s", what, event.src_path)
+        b.inc_backup(Config.src_dir,Config.dst_dir,Config.md5file)    
+
+    # def on_any_event(self, event):
+    #     b.inc_backup(Config.src_dir,Config.dst_dir,Config.md5file) 
 
 if __name__ == "__main__":
     # src_dir = sys.argv[1]if len(sys.argv) > 1 else '.'
@@ -27,7 +29,6 @@ if __name__ == "__main__":
                     datefmt='%Y-%m-%d %H:%M:%S',
                     filename=Config.log_file)
     b.full_backup(Config.src_dir,Config.dst_dir,Config.md5file)
-
 
     observer = Observer()
     event_handler = backup()
